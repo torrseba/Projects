@@ -1,17 +1,8 @@
-//alert('test')
-//document.body.innerHTML = '<h1>lol<h1>';
-//let input1 =document.getElementsByName('xcoordinate');
-//console.log(input1);
-//let long = document.getElementById("long");
-//let lat = document.getElementById("lat");
-//let dat = document.getElementById("date");
+
 const RightA = document.getElementById("RightA");
 const Declination = document.getElementById("Declination");
 const zoom = document.getElementById("zoom");
 
-//const applicationId ='12bd8c02-b2b9-4cd9-a522-6b3f63234693';
-//const applicationSecret = '34fa54cd9605e3ba1185434c1511f29fb26cb1685121b0dd701b47ab1c4be0aec414883f7132593ea135efa5e737507dc21f5baa0f7ace29d94da8c516628c637d21397b9e9f6dba0a24bf602d3a3d1b6a91622895a3847c8373ecd75c7111ee7e9a4f6bc5814f04988176f14a00900f';
-//const hash1 = btoa(`${applicationId}:${applicationSecret}`);
 const astro = document.getElementById("astro");
 const listener = document.getElementById("listener");
 
@@ -20,16 +11,23 @@ let x=0;
 let y = 0;
 let RA =1;
 let dec=1;
+let ASTRO_API_KEY;
+let X_AIO_KEY;
 
-//function displayImage(src, width, height) {
-//    var img = document.createElement("img");
-//    img.src = src;
- //  img.width = width;
-//    img.height = height;
-//    document.body.appendChild(img);
-//   }
+document.addEventListener('DOMContentLoaded', function() {
+    let key = firebase.database().ref('/ASTRO_KEY')
+    key.on('value', snapshot => { 
+        ASTRO_API_KEY = snapshot.val();
+    });
 
-function displayImage(src, width, height){ //IMAGE ISSUES NOT UPDATING??????
+    let key2 = firebase.database().ref('/X_AIO_KEY')
+    key2.on('value', snapshot => { 
+        X_AIO_KEY = snapshot.val();
+    });
+
+});
+
+function displayImage(src, width, height){ 
     document.getElementById("img2").src = src;
     document.getElementById("img2").width = width;
     document.getElementById("img2").height = height;
@@ -39,13 +37,8 @@ function displayImage(src, width, height){ //IMAGE ISSUES NOT UPDATING??????
 ardu.addEventListener("submit", (e) => {
     e.preventDefault();
     console.log("Fetching Arduino Data...");
-    //getImage();
     setInterval(getImage, 5000);
     //clearInterval(loop);
-    
-
-
-
 });
 
 
@@ -53,13 +46,11 @@ ardu.addEventListener("submit", (e) => {
 astro.addEventListener("submit", (e) => {
     e.preventDefault();
 
-
-
     fetch("https://api.astronomyapi.com/api/v2/studio/star-chart", {
   "headers": {
     "accept": "application/json, text/plain, */*",
     "accept-language": "en-US,en;q=0.9",
-    "authorization": "Basic MTJiZDhjMDItYjJiOS00Y2Q5LWE1MjItNmIzZjYzMjM0NjkzOjM0ZmE1NGNkOTYwNWUzYmExMTg1NDM0YzE1MTFmMjlmYjI2Y2IxNjg1MTIxYjBkZDcwMWI0N2FiMWM0YmUwYWVjNDE0ODgzZjcxMzI1OTNlYTEzNWVmYTVlNzM3NTA3ZGMyMWY1YmFhMGY3YWNlMjlkOTRkYThjNTE2NjI4YzYzN2QyMTM5N2I5ZTlmNmRiYTBhMjRiZjYwMmQzYTNkMWI2YTkxNjIyODk1YTM4NDdjODM3M2VjZDc1YzcxMTFlZTdlOWE0ZjZiYzU4MTRmMDQ5ODgxNzZmMTRhMDA5MDBm",
+    "authorization": ASTRO_API_KEY,
     "content-type": "application/json;charset=UTF-8",
     "sec-ch-ua": "\"Chromium\";v=\"110\", \"Not A(Brand\";v=\"24\", \"Google Chrome\";v=\"110\"",
     "sec-ch-ua-mobile": "?0",
@@ -81,21 +72,9 @@ astro.addEventListener("submit", (e) => {
     .then(function(data){
     var str = JSON.stringify(data);
     var jsonObj = JSON.parse(str);
-    //console.log(data);
-    //console.log(str);
-    //console.log(str.data.imageUrl);
-    //document.write(data.imageUrl);
-    //document.write(str);
-    //console.log(long)
-    //console.log(longValue);
-    //console.log(dateValue);
-    //console.log(dateValue)
     console.log(jsonObj.data);
     console.log(jsonObj.data.imageUrl);
-    //document.write(str.data.imgUrl);
-    //displayImage(jsonObj.data.imageUrl, 700, 700);
     displayImage(jsonObj.data.imageUrl, 600, 600);
-    /////////displayImage(str.data, 300, 300);
 })
 .catch(function(error){
     console.log("Error lolz " + error);
@@ -103,45 +82,11 @@ astro.addEventListener("submit", (e) => {
 }) ;
 
 
-
-
-
-
-/*async function getx(){
-    let xcord = await fetch("https://io.adafruit.com/api/v2/torrseba/feeds/xaxis", {
-        "headers":{
-            "x-aio-key":"aio_hSVK99L1uO2OTRZGlgEmPAYwo8W3"
-        },
-        method:"GET"
-    })
-    let data = await xcord.json();
-    //data.then((value) => x = value)
-    let feed = JSON.stringify(data);
-    let feedJsonObj = JSON.parse(feed);
-    x = feedJsonObj.last_value
-    return feedJsonObj.last_value;
-}*/
-
-
-function RAdec(x, y){
-    x +=1;
-    y+=1;
-    RA = x + y;
-    dec = x + y;
-    console.log("RAAAAAA: ",Number(RA));
-    console.log("decccCC: ",Number(dec));
-}
-
-
 function getImage(){ 
-    //let longValue = long.value;
-    //let latValue = lat.value;
-    //let dateValue = dat.value;
-
 
     fetch("https://io.adafruit.com/api/v2/torrseba/feeds/x1", {
         "headers":{
-            "x-aio-key":"aio_hSVK99L1uO2OTRZGlgEmPAYwo8W3"
+            "x-aio-key": X_AIO_KEY
         },
         method:"GET"
     }).then(function(response){
@@ -149,14 +94,13 @@ function getImage(){
     }).then(function(data){
         var feed = JSON.stringify(data);
         var feedJsonObj = JSON.parse(feed);
-        //console.log(feedJsonObj);
         console.log("x: ",feedJsonObj.last_value);
         x = Number(feedJsonObj.last_value);
     })
 
     fetch("https://io.adafruit.com/api/v2/torrseba/feeds/y1", {
         "headers":{
-            "x-aio-key":"aio_hSVK99L1uO2OTRZGlgEmPAYwo8W3"
+            "x-aio-key": X_AIO_KEY
         },
         method:"GET"
     }).then(function(response){
@@ -164,14 +108,13 @@ function getImage(){
     }).then(function(data){
         var feedy = JSON.stringify(data);
         var feedJsonObjy = JSON.parse(feedy);
-        //console.log(feedJsonObjy);
         console.log("y: ",feedJsonObjy.last_value);
         y = Number(feedJsonObjy.last_value);
     })
 
     fetch("https://io.adafruit.com/api/v2/torrseba/feeds/z1", {
         "headers":{
-            "x-aio-key":"aio_hSVK99L1uO2OTRZGlgEmPAYwo8W3"
+            "x-aio-key": X_AIO_KEY
         },
         method:"GET"
     }).then(function(response){
@@ -181,14 +124,11 @@ function getImage(){
         var feedJsonObjz = JSON.parse(feedz);
         let today = new Date();
         let hr = today.getHours();
-        //let hr = 15;
 
-        //console.log("HR: ",hr);
         let N = (hr + 3) % 24;
         let W = (hr + 9) % 24;
         let S = (hr + 15) % 24;
         let E = (hr + 21) % 24;
-        //console.log("South: ",S);
 
         if(x <= -.5){
 
@@ -207,7 +147,6 @@ function getImage(){
                     RA = N;
                 }
                 else{
-                    //RA = hr; 
                     RA = (E + 3) % 24;
                 }	
 	        }
@@ -218,7 +157,6 @@ function getImage(){
             }
             else if(y < -.5){
                 dec = 40;
-                //RA = hr; 
                 RA = (E + 3) % 24;
             }
         }
@@ -260,9 +198,6 @@ function getImage(){
             RA = (W + 6 + y*6) % 24;
         }
         console.log("z: ",feedJsonObjz.last_value);
-        //console.log("RA is: ", RA);
-        //console.log("Dec is :", dec);
-        //console.log(feedJsonObjz);
         z = Number(feedJsonObjz.last_value);
         
     })
@@ -272,7 +207,7 @@ function getImage(){
   "headers": {
     "accept": "application/json, text/plain, */*",
     "accept-language": "en-US,en;q=0.9",
-    "authorization": "Basic MTJiZDhjMDItYjJiOS00Y2Q5LWE1MjItNmIzZjYzMjM0NjkzOjM0ZmE1NGNkOTYwNWUzYmExMTg1NDM0YzE1MTFmMjlmYjI2Y2IxNjg1MTIxYjBkZDcwMWI0N2FiMWM0YmUwYWVjNDE0ODgzZjcxMzI1OTNlYTEzNWVmYTVlNzM3NTA3ZGMyMWY1YmFhMGY3YWNlMjlkOTRkYThjNTE2NjI4YzYzN2QyMTM5N2I5ZTlmNmRiYTBhMjRiZjYwMmQzYTNkMWI2YTkxNjIyODk1YTM4NDdjODM3M2VjZDc1YzcxMTFlZTdlOWE0ZjZiYzU4MTRmMDQ5ODgxNzZmMTRhMDA5MDBm",
+    "authorization": ASTRO_API_KEY,
     "content-type": "application/json;charset=UTF-8",
     "sec-ch-ua": "\"Chromium\";v=\"110\", \"Not A(Brand\";v=\"24\", \"Google Chrome\";v=\"110\"",
     "sec-ch-ua-mobile": "?0",
@@ -296,20 +231,9 @@ function getImage(){
     var jsonObj = JSON.parse(str);
     console.log("RA is: ",Number(RA));
     console.log("dec is: ",Number(dec));
-    //console.log(data);
-    //console.log(str);
-    //console.log(str.data.imageUrl);
-    //document.write(data.imageUrl);
-    //document.write(str);
-    //console.log(long)
-    //console.log(longValue);
-    //console.log(dateValue);
     console.log(jsonObj.data);
     console.log(jsonObj.data.imageUrl);
-    //document.write(str.data.imgUrl);
-    //displayImage(jsonObj.data.imageUrl, 700, 700);
     displayImage(jsonObj.data.imageUrl, 600, 600);
-    /////////displayImage(str.data, 300, 300);
     })
     .catch(function(error){
     console.log("Error lolz " + error); 
