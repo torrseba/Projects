@@ -1,0 +1,44 @@
+<html>
+<head>
+	<title>Sebastian Torres</title>
+</head>
+
+<body>
+<section id = "image1">
+
+<h1>Constallation Finder</h1><p>By Sebastian Torres</p>
+<br>
+
+<h3>Test the finder by inputting custom values</h3>
+<p>Right Ascencion moves you around the globe (values 0-24), and Declination moves you up and down (90 for North Star, -90 for whatever's down there)</p>
+<img src="file:///C:/inetpub/wwwroot/CoordImage.png"></img>
+</section>
+<script defer src="file:///C:/inetpub/wwwroot/script1.js"></script>
+<form method="POST" id="astro">
+	
+	<label for="RightA">Right Ascencion</label>
+	<input id="RightA" type="number"/>
+
+	<label for="Declination">Declination</label>
+	<input id="Declination" type="number"/>
+
+	<label for="zoom">zoom</label>
+	<input id="zoom" type="number"/>
+
+	
+	<input type="submit" value="Submit"/>
+  </form>
+
+  <img id="img2"></img>
+
+
+</body>
+<br>
+<h3>Clck here to measure Arduino tilt values</h3>
+<form method="POST" id="ardu">
+	<input type="submit" value="Listen for Arduino" id="listener"/>
+
+</form>
+
+
+</html>
